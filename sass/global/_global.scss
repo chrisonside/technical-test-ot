@@ -1,0 +1,55 @@
+/**
+*
+* Page width constrain. Set the max and minimum width and use `@extend %constrain` to constrain the width.
+*
+**/
+
+$layout-max-width: 1024px;
+$standard-padding: 20px;
+
+%constrain {
+    max-width: $layout-max-width;
+    margin: 0 auto;
+}
+
+/**
+*
+* Set up a few basic font sizes for a consistent look across the site.
+*
+**/
+
+body {
+    @include font-size(16);
+    font-family: $font-primary;
+    -webkit-font-smoothing: antialiased;
+    color: $primary-text-colour;
+}
+
+h1,
+h2,
+h3 {
+	font-family: $font-title;
+}
+
+h1 {
+	@include font-size(29);
+	@include line-height(38);
+	margin-bottom: 15px;
+}
+
+h2 {
+	@include font-size(23);
+	@include line-height(29);
+	margin-bottom: 15px;
+}
+
+h3 {
+	@include font-size(21);
+	@include line-height(26);
+}
+
+p {
+	@include font-size(16);
+	@include line-height(22);
+	margin-bottom: 15px;
+}
