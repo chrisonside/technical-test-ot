@@ -1,4 +1,170 @@
 .menu {
 	padding: $standard-padding;
+	background-color: $primary-background-colour;
+}
+
+.menu__wrapper {
+	max-width: 600px;
+	margin: 0 auto 20px;
+	padding: $standard-padding;
 	background-color: $colour-white;
+	border-radius: $border-radius;
+}
+
+.menu__table {
+	width: 100%;
+}
+
+.menu__intro {
+	padding-bottom: $standard-padding;
+	border-bottom: 2px solid $primary-btn-bg-colour;
+	margin-bottom: 20px;
+	strong{
+		font-style: italic;
+	}
+}
+
+.menu__column-blank--1 {
+	width: 0;
+}
+
+.menu__column-heading {
+	@include font-size(16);
+	@include line-height(18);
+	text-align: center;
+	color: $primary-btn-bg-colour;
+	font-weight: 700;
+
+	/* 	Have to specify font size and line height explicity inside of media query. 
+		This is because SASS will not let you @extend an outer selector from within @media */
+	@media screen and (min-width: $large-mobile-breakpoint) {
+		font-size: 16px;
+		font-size: 1.6rem;
+		line-height: 18px;
+		line-height: 1.8rem;
+		text-align: center;
+		margin-bottom: 0;
+	}
+
+}
+
+.menu__category {
+	@extend h3;
+	padding: 10px 0 5px;
+	color: $primary-btn-bg-colour;
+
+	&--0 {
+		/* Allow Diner 1 and Diner 2 column headings closer in */
+		padding-top: 5px;
+	}
+}
+
+.menu__description {
+	@include font-size(14);
+	@include line-height(17);
+	width: 60%;
+	vertical-align: middle;
+	
+	&--1 {
+		width: 0;
+		label {
+			display: none;
+		}
+	}
+
+	/* 	Have to specify font size and line height explicity inside of media query. 
+		This is because SASS will not let you @extend an outer selector from within @media */
+	@media screen and (min-width: $large-mobile-breakpoint) {
+		font-size: 16px;
+		font-size: 1.6rem;
+		line-height: 22px;
+		line-height: 2.2rem;
+	}
+
+}
+
+.menu__choice {
+	width: 20%;
+	vertical-align: middle;
+	text-align: center;
+}
+
+/* 
+*	Checkboxes
+*/
+
+input[type='checkbox'] {
+	-moz-appearance: none;
+	-webkit-appearance:none;
+	width: 21px;
+	height: 21px;
+	background-color: $colour-white;
+	border-radius: $border-radius;
+	border: 2px solid $primary-btn-bg-colour;
+	}
+input[type='checkbox']:checked {
+    background-color: $primary-btn-bg-colour;
+}
+
+/* 
+*	Menu total cost and summary section
+*/
+
+.menu__summary {
+	@extend .menu__wrapper;
+	text-align: center;
+}
+
+.menu__cost-wrapper {
+	display: block;
+	margin-bottom: 20px;
+
+	@media screen and (min-width: $large-mobile-breakpoint) {
+		display: inline-block;
+		width: 50%;
+		vertical-align: middle;
+		margin-bottom: 0;
+		text-align: left;
+	}
+
+}
+
+.menu__order {
+
+	@media screen and (min-width: $large-mobile-breakpoint) {
+		display: inline-block;
+		width: 50%;
+		vertical-align: middle;
+		margin-left: -6px;
+		text-align: right;
+	}
+}
+
+.menu__cost-title {
+
+}
+
+.menu__total {
+	margin-bottom: 0;
+}
+
+
+/* 
+*	The order now button
+*/
+
+.menu__button {
+	@include font-size(22);
+	@include line-height(22);
+	padding: 15px 30px;
+	border: 0;
+	color: $colour-white;
+	background-color: $primary-btn-bg-colour;
+	transition: background-color 0.3s ease-in;
+	border-radius: $border-radius;
+
+	&:hover {
+		background-color: $primary-btn-bg-colour--hover;
+		cursor: pointer;
+	}
 }
