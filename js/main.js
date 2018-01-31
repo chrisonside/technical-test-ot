@@ -5,7 +5,7 @@ import menuData from './data/mealData';
 import * as table from './modules/table';
 
 // Grab our target for where food form will be injected.
-const targetform = document.querySelector('.menu__entry');
+const targetform = document.querySelector('.menu__wrapper');
 // Generate a docfrag
 let fragment = document.createDocumentFragment();
 
@@ -13,7 +13,7 @@ let fragment = document.createDocumentFragment();
 let dinerCount = 2;
 
 // Create our menu - outputting this in table form
-let menuTable = table.createTable('.menu__table');
+let menuTable = table.createTable('menu__table');
 
 // Add menu column headings, e.g. Diner 1, Diner 2
 menuTable = table.createTableHeaders(dinerCount, menuTable);
@@ -35,7 +35,7 @@ for (var menuSection in menuData) {
                     newTicker.productCode, 
                     newTicker.name, 
                     newTicker.price, 
-                    'starter', 
+                    menuSection, 
                     menuTable
                 );
             }

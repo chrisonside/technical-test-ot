@@ -5,14 +5,18 @@ function createTable(className) {
 }
 
 function createTableHeaders(count, table) {
-	// Insert table row
 	var row = table.insertRow(0);
 
-	// Now insert cells for this row. 
-	// For each diner I am inserting two cells, one for the food label and one for the radio selection button
+	/* 
+	* Insert column headings, e.g. Diner 1, Diner 2.
+	* For each diner I am inserting two cells, the first of which is blank.
+	* This ensures these column header cells are uniform with table cells appearing below them.
+	*/	
 	for(let i = 0; i < count; i++) {
 		let cell1 = row.insertCell(-1);
+		cell1.classList.add('menu__column-blank', `menu__column-blank--${i}`);
 		let cell2 = row.insertCell(-1);
+		cell2.classList.add('menu__column-heading');
 		cell2.innerHTML = `Diner ${i + 1 }`;
 	}
 
@@ -22,35 +26,42 @@ function createTableHeaders(count, table) {
 function createTableSection(dinerCount, table, sectionTitle) {
 	var row = table.insertRow(-1);
 	var cell = row.insertCell(0);
+	cell.classList.add('menu__category');
 	cell.innerHTML= `${sectionTitle}`;
 	cell.colSpan = dinerCount * 2;
 	return table;
 }
 
 function addTableData(dinerCount, productCode, productName, productPrice, course, table) {
-	// First insert our row
 	var row = table.insertRow(-1);
   
-	// Now insert our cells for this row
+	/* 
+	*	So for each diner, insert a product description and checkbox
+	* 	Whilst I'm only displaying one product descriptions on the form (to avoid it being too wordy), 
+	*	it's important to include labels for each checkbox in the mark-up, for those who with accessibility needs who can't see the UI
+	*/
 	for(var i = 0; i < dinerCount; i++) {
-		// First add description cell
+		
+		// First add the product description cell
 		var cell1 = row.insertCell(-1);
-		cell1.classList.add('diner__description', `diner__description--${i}`);
-			let label1 = document.createElement('label');
+		cell1.classList.add('menu__description', `menu__description--${i}`);
+		let label1 = document.createElement('label');
+		// Associate label with correct checkbox button
 		label1.htmlFor = `diner-${i}-${productCode}`;
+		// Insert text for product name, price 
 		label1.innerHTML = `${productName}, &pound;${productPrice}`;
 		cell1.appendChild(label1);
-		// Now add the radio button for each diner
+		
+		// Now add the checkbox button for each diner
 		var cell2 = row.insertCell(-1);
-		cell2.classList.add('diner__choice');
-		let radio = document.createElement('input');
-		radio.type = 'radio';
-		radio.id = `diner-${i}-${productCode}`;
-		radio.name = `diner-${i}-${course}`;
-		radio.value = productCode;
-		radio.dataset.name = `${productName}`;
-		radio.dataset.price = `${productPrice}`;
-		cell2.appendChild(radio);
+		cell2.classList.add('menu__choice');
+		let checkbox = document.createElement('input');
+		checkbox.type = 'checkbox';
+		checkbox.id = `diner-${i}-${productCode}`; // Corresponds to accompanying label
+		checkbox.name = `diner-${i}-${course}`; // Tells our database which field to populate 
+		checkbox.value = productCode; // Value to input into database
+		checkbox.dataset.price = `${productPrice}`; // Easy access to the price, for the bill calculation
+		cell2.appendChild(checkbox);
 	}
 
 	return table;
