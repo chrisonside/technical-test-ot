@@ -1,11 +1,29 @@
 /**
 *
+* Set up a few global variables
+*
+**/
+
+$standard-padding: 20px;
+$border-radius: 3px;
+
+/**
+*
+* Set up a few standard breakpoints
+*
+**/
+
+$large-mobile-breakpoint: 420px;
+$tablet-breakpoint: 768px;
+$desktop-breakpoint: 1024px;
+
+/**
+*
 * Page width constrain. Set the max and minimum width and use `@extend %constrain` to constrain the width.
 *
 **/
 
 $layout-max-width: 1024px;
-$standard-padding: 20px;
 
 %constrain {
     max-width: $layout-max-width;
@@ -27,7 +45,8 @@ body {
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
 	font-family: $font-title;
 }
 
@@ -48,8 +67,17 @@ h3 {
 	@include line-height(26);
 }
 
+h4 {
+	@include font-size(18);
+	@include line-height(23);
+}
+
 p {
 	@include font-size(16);
 	@include line-height(22);
 	margin-bottom: 15px;
+}
+
+strong {
+	font-weight: 700;
 }
