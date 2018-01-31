@@ -1,4 +1,9 @@
 .header {
 	padding: 0 $standard-padding;
 	background-color: $colour-white;
+	text-align: center;
+}
+
+.header__logo {
+	max-width: 350px;
 }
