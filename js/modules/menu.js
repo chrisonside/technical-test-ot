@@ -11,7 +11,7 @@ const Menu = class Menu {
         this.order = {
             // We will add to order as user interacts with menu
         }
-        this.MenuState = {
+        this.menuState = {
             // We will add to menu state as user input is validated
         };
     }
@@ -37,9 +37,10 @@ const Menu = class Menu {
     // Called when one of the required fields inputs changes (e.g. input, textarea or checkbox etc. )
     static inputChange(e) {
 
-        const activeElem = e.target; // The input element which has been changed
-        const itemName = e.target.name; // Name of the input
-        const itemValue = e.target.value; // Input value
+        const activeElem = e.target; // The html input element which has changed
+        const itemValue = e.target.value; // Input value e.g. salmon
+        const itemName = e.target.name; // Name of the input e.g. diner-1-desserts
+        const itemId = e.target.id; // Id of the input e.g. diner-1-cheesecake
 
         // const diner = this.findAncestor(activeElem, 'diner'); // The diner this input element belongs to
 
@@ -49,9 +50,11 @@ const Menu = class Menu {
         // Now update the order object
         this.updateOrder(activeElem, itemName, itemValue);
 
+        this.validateOptions(itemValue, itemId);
+
         // Finally if all the inputs are now valid, remove the error state from the submit button
         if (this.constructor.isFormValid(this.menuState)) {
-            const submitButton = document.querySelector('.btnSubmit');
+            const submitButton = document.getElementById('js-submit-button');
             submitButton.classList.remove('btnSubmit--in-error');
         }
     
@@ -64,39 +67,45 @@ const Menu = class Menu {
         
         let selectedMeals = document.querySelectorAll(`${this.menuId} input[type="checkbox"]:checked`);
         let NodeListlength = selectedMeals.length;
+        let currentBill = 0;
         
         for (let i = 0; i < NodeListlength; i++) {
             
             // For each selected meal, add it to the order object
             this.order[ selectedMeals[i].name ] = selectedMeals[i].id;
             
-            // Update the running price total
+            // Update the price total
             let price = parseFloat(selectedMeals[i].dataset.price);
-            this.calculateBill(price);
-            
-            /*
-            *   To avoid angering user by only telling them their selection is invalid when they click order (submit) button,
-            *   we are testing for 2 conditions at this stage - waiter approval and food items being in/out of stock
-            */
-            
-            if( validation.limitNotExceeded(this.order, this.shortSupply) ) {
-                this.menuState[limitNotExceeded] = true;
+            currentBill += price;
+        }
+
+        this.updateBill(currentBill);
+    }
+
+    validateOptions(selectedDish, itemId) {
+        /*
+        *   To avoid angering user by only telling them their selection is invalid when they click order (submit) button,
+        *   we are testing for 2 conditions at this stage - waiter approval and food items being in/out of stock
+        */ 
+        if (selectedDish === 'cheesecake') {
+            if( validation.limitNotExceeded(this.order, 'cheesecake', 1) ) {
+                this.menuState['limitNotExceeded'] = true;
             } else {
-                this.menuState[limitNotExceeded] = false;
-                this.errorLog.innerHTML = `Sorry, we only have one piece of ${this.shortSupply}`;
+                this.menuState['limitNotExceeded'] = false;
+                this.errorLog.innerHTML = `Sorry, we only have one piece of cheesecake`;
             }
-                
-            }
-            if( validation.noBannedCombinations(this.order, 'cocktail', 'salmon') ) {
-                this.menuState[noBannedCombinations] = true;
+        }
+
+        if (selectedDish === 'prawn' || 'salmon') {
+            if( validation.noBannedCombinations(this.order, 'prawn', 'salmon') ) {
+                this.menuState['noBannedCombinations'] = true;
             } else {
-                this.menuState[noBannedCombinations] = false;
+                this.menuState['noBannedCombinations'] = false;
                 this.errorLog.innerHTML = 'Sorry, Pierre our waiter cannot possibly let you order both the prawn cocktail and salmon. Please choose again!';
                 document.body.classList.add('unleash-pierre');
             }
-
         }
-        console.log(this.order);
+
     }
 
     toggleOneCheckboxOnly(activeElem, itemName) {
@@ -110,13 +119,10 @@ const Menu = class Menu {
         activeElem.checked = true;
     }
 
-    calculateBill(price) {
-        // Recalculate bill - count all checked boxes, grab their price data attribute, and work out total
-        let total = 0;
+    updateBill(price) {
         let totalElem = document.getElementById('js-menu-total');
-        total += price;
         // Now update the running total
-        totalElem.innerHTML = `&pound;${total}`;
+        totalElem.innerHTML = `&pound;${price}`;
     }
 
     initialise() {

@@ -57,6 +57,7 @@ function addTableData(dinerCount, productCode, productName, productPrice, course
 		cell2.classList.add('menu__choice');
 		let checkbox = document.createElement('input');
 		checkbox.type = 'checkbox';
+		checkbox.classList.add('js-validate');
 		checkbox.id = `diner-${i}-${productCode}`; // Corresponds to accompanying label
 		checkbox.name = `diner-${i}-${course}`; // Tells our database which field to populate 
 		checkbox.value = productCode; // Value to input into database
