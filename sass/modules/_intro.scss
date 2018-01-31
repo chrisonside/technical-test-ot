@@ -1,8 +1,13 @@
 .intro {
 	padding: $standard-padding;
 	background-color: $primary-background-colour;
+	text-align: center;
 }
 
-.intro__title {
-	
+.intro__wrapper {
+	max-width: 600px;
+	margin: 0 auto;
+	padding: $standard-padding;
+	background-color: $colour-white;
+	border-radius: 5px;
 }
