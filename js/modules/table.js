@@ -1,3 +1,5 @@
+'use strict';
+
 function createTable(className) {
 	let newTable = document.createElement('table');
 	newTable.classList.add(className);
@@ -59,7 +61,7 @@ function addTableData(dinerCount, productCode, productName, productPrice, course
 		checkbox.type = 'checkbox';
 		checkbox.classList.add('js-validate');
 		checkbox.id = `diner-${i}-${productCode}`; // Corresponds to accompanying label
-		checkbox.name = `diner-${i}-${course}`; // Tells our database which field to populate 
+		checkbox.name = `diner-${i}-${course}`.toLowerCase(); // Tells our database which field to populate 
 		checkbox.value = productCode; // Value to input into database
 		checkbox.dataset.price = `${productPrice}`; // Easy access to the price, for the bill calculation
 		cell2.appendChild(checkbox);

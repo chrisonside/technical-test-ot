@@ -30,7 +30,7 @@ var menuData = {
     "Meatballs": {
     	"name": "Meatballs",
       "productCode": "meatballs",
-      "price": 11.50
+      "price": 11.5
     },
     "Salmon Fillet": {
     	"name": "Salmon Fillet",
@@ -52,7 +52,7 @@ var menuData = {
     "Tiramisu": {
     	"name": "Tiramisu",
       "productCode": "tiramisu",
-      "price": 4.50
+      "price": 4.5
     },
     "Cheesecake": {
     	"name": "Cheesecake",
@@ -63,7 +63,7 @@ var menuData = {
     "Ice Cream": {
     	"name": "Ice Cream",
       "productCode": "icecream",
-      "price": 3.50
+      "price": 3.5
     },
   }
 };
