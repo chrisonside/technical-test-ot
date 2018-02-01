@@ -8,7 +8,6 @@ function createTable(className) {
 
 function createTableHeaders(count, table) {
 	var row = table.insertRow(0);
-
 	/* 
 	* Insert column headings, e.g. Diner 1, Diner 2.
 	* For each diner I am inserting two cells, the first of which is blank.
@@ -36,14 +35,12 @@ function createTableSection(dinerCount, table, sectionTitle) {
 
 function addTableData(dinerCount, productCode, productName, productPrice, course, table) {
 	var row = table.insertRow(-1);
-  
 	/* 
 	*	So for each diner, insert a product description and checkbox
-	* 	Whilst I'm only displaying one product descriptions on the form (to avoid it being too wordy), 
-	*	it's important to include labels for each checkbox in the mark-up, for those who with accessibility needs who can't see the UI
+	* 	Whilst I'm only displaying one product description on the form (to avoid it being too wordy), 
+	*	it is important to include labels for each checkbox in the mark-up, for those with accessibility needs who can't see the UI
 	*/
 	for(var i = 0; i < dinerCount; i++) {
-		
 		// First add the product description cell
 		var cell1 = row.insertCell(-1);
 		cell1.classList.add('menu__description', `menu__description--${i}`);

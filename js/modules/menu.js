@@ -45,7 +45,9 @@ const Menu = class Menu {
         return isValid;
     }
 
-    // Called when one of the menu inputs change
+    /*
+    *   This function is called when one of the menu inputs changes
+    */
     static inputChange(e) {
 
         const activeElem = e.target; // The html input element which has changed
@@ -70,7 +72,8 @@ const Menu = class Menu {
     }
 
     /*
-    *   A function to update the menuOrder object, and which calls the function to update the running price total
+    *   A function to update the menuOrder object
+    *   This also calls the function to update the running price total
     */
     updateOrder() {
         
@@ -128,6 +131,9 @@ const Menu = class Menu {
 
     }
 
+    /*
+    *   A function to toggle off related checkboxes (apart from the one clicked)
+    */
     toggleOneCheckboxOnly(activeElem, itemName) {
         // First, uncheck all other checkboxes for that diner, for that course
         let sameNameSiblings = document.getElementsByName(itemName);
@@ -139,18 +145,24 @@ const Menu = class Menu {
         activeElem.checked = true;
     }
 
+    /*
+    *   A function to update the total bill
+    */
     updateBill(price) {
         let totalElem = document.getElementById('js-menu-total');
         // Now update the running total
         totalElem.innerHTML = `&pound;${price}`;
     }
 
+    /*
+    *   Initialise the menu UI
+    */
     initialise() {
-        // Set form variables
-        const menuInputs = document.querySelectorAll(this.inputsClass); // The inputs that trigger validation
-
-        // Reset form values, in case user has clicked back after submitting form
+        // Reset form values, in case user has clicked back button after submitting form
         this.menuElement.reset();
+
+        // Initialise the form inputs
+        const menuInputs = document.querySelectorAll(this.inputsClass);
 
         // Listen for changes in the checkbox elements
         for (let i = 0; i < menuInputs.length; i++) {
@@ -158,9 +170,12 @@ const Menu = class Menu {
         }
 
         // Also listen for the user clicking submit
-       this.menuElement.addEventListener('submit', this.onFormSubmit.bind(this));
+        this.menuElement.addEventListener('submit', this.onFormSubmit.bind(this));
     }
 
+    /*
+    *   A function to handle the user clicking on submit
+    */
     onFormSubmit(e) {
         // useful for debugging
         // console.log(this.menuState);

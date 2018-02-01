@@ -6,11 +6,12 @@ import menuData from './data/mealData';
 // Import methods from table building module
 import * as table from './modules/table';
 
-// Import our order module, which will keep a tab on the user's actions as they interact with the UI
+// Import our menu module, which will monitor and react to user's actions as they interact with the UI
 import Menu from './modules/menu';
 
-// Grab our target for where food form will be injected.
+// Grab target div where our populated menu will be injected.
 const targetform = document.querySelector('.menu__wrapper');
+
 // Generate a docfrag
 let fragment = document.createDocumentFragment();
 
@@ -53,6 +54,6 @@ fragment.appendChild(menuTable);
 // And attach our docfrag
 targetform.appendChild(fragment);
 
-// Now we have our menu laid out, initialise it so it's ready for reacting to the user's actions
+// Now we have our menu laid out, initialise the menu so it's ready for reacting to the user's actions
 const orderInit = new Menu('menu', 'menu', '.js-validate');
 orderInit.initialise();
