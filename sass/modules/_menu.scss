@@ -4,6 +4,7 @@
 }
 
 .menu__wrapper {
+	position: relative;
 	max-width: 600px;
 	margin: 0 auto 20px;
 	padding: $standard-padding;
@@ -17,7 +18,6 @@
 
 .menu__intro {
 	padding-bottom: $standard-padding;
-	border-bottom: 2px solid $primary-btn-bg-colour;
 	margin-bottom: 20px;
 	strong{
 		font-style: italic;
@@ -29,8 +29,8 @@
 }
 
 .menu__column-heading {
-	@include font-size(16);
-	@include line-height(18);
+	@include font-size(14);
+	@include line-height(16);
 	text-align: center;
 	color: $primary-btn-bg-colour;
 	font-weight: 700;
@@ -38,10 +38,10 @@
 	/* 	Have to specify font size and line height explicity inside of media query. 
 		This is because SASS will not let you @extend an outer selector from within @media */
 	@media screen and (min-width: $large-mobile-breakpoint) {
-		font-size: 16px;
-		font-size: 1.6rem;
-		line-height: 18px;
-		line-height: 1.8rem;
+		font-size: 20px;
+		font-size: 2.0rem;
+		line-height: 22px;
+		line-height: 2.2rem;
 		text-align: center;
 		margin-bottom: 0;
 	}
@@ -100,7 +100,7 @@ input[type='checkbox'] {
 	height: 21px;
 	background-color: $colour-white;
 	border-radius: $border-radius;
-	border: 2px solid $primary-btn-bg-colour;
+	border: 1px solid $primary-btn-bg-colour;
 	}
 input[type='checkbox']:checked {
     background-color: $primary-btn-bg-colour;
@@ -140,14 +140,56 @@ input[type='checkbox']:checked {
 	}
 }
 
-.menu__cost-title {
-
-}
-
 .menu__total {
 	margin-bottom: 0;
 }
 
+/* 
+*	Error messages
+*/
+
+.menu__errors {
+	color: $error-colour;
+	text-align: left;
+}
+
+.menu__error {
+	/* Messages triggered on and off with javaScript via their id hook */
+	display: none;
+}
+
+.menu__waiter {
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    margin-left: -75px;
+    width: 150px;
+    background-color: $colour-valencia;
+    border-radius: 50%;
+	transform: scale(0);
+	will-change: transform;
+	transition: transform 0.3s ease-in-out;
+}
+
+.menu--waiter-live .menu__waiter {
+	transform: scale(1);
+}
+
+/* 
+*	Success messages
+*/
+
+.menu__success {
+	/* Message triggered on and off with javaScript via their id hook */
+	display: none;
+	color: $colour-apple;
+	@include font-size(22);
+	@include line-height(26);
+	text-align: center;
+	@media screen and (min-width: $large-mobile-breakpoint) {
+		text-align: left;
+	}
+}
 
 /* 
 *	The order now button
