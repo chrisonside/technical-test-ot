@@ -1,14 +1,25 @@
-// Import our form validation script
+'use strict';
+
+// Import our menu validation module
 import * as validation from './validation';
+
+// Import our error messages module
+import * as error from './error';
 
 // Construct our Menu object
 const Menu = class Menu {
   
-    constructor(menuId, inputsClass) {
+    constructor(menuId, menuClass, inputsClass) {
         this.menuId = menuId;
+        this.menuClass = menuClass;
         this.inputsClass = inputsClass;
+        this.menuElement = document.getElementById(this.menuId);
         this.errorLog = document.getElementById('js-menu-error-log');
-        this.order = {
+        this.submitButton = document.getElementById('js-submit-button');
+        this.errorwaiter = false;
+        this.errorlimit = false;
+        this.errorminimum = false;
+        this.menuOrder = {
             // We will add to order as user interacts with menu
         }
         this.menuState = {
@@ -34,7 +45,7 @@ const Menu = class Menu {
         return isValid;
     }
 
-    // Called when one of the required fields inputs changes (e.g. input, textarea or checkbox etc. )
+    // Called when one of the menu inputs change
     static inputChange(e) {
 
         const activeElem = e.target; // The html input element which has changed
@@ -42,37 +53,35 @@ const Menu = class Menu {
         const itemName = e.target.name; // Name of the input e.g. diner-1-desserts
         const itemId = e.target.id; // Id of the input e.g. diner-1-cheesecake
 
-        // const diner = this.findAncestor(activeElem, 'diner'); // The diner this input element belongs to
-
         // First, uncheck all other checkboxes for that diner, for that course
         this.toggleOneCheckboxOnly(activeElem, itemName);
 
-        // Now update the order object
+        // Now update the menuOrder object
         this.updateOrder(activeElem, itemName, itemValue);
 
+        // Validate options chosen by user, to ensure they are in line with restaurant rules
         this.validateOptions(itemValue, itemId);
 
         // Finally if all the inputs are now valid, remove the error state from the submit button
-        if (this.constructor.isFormValid(this.menuState)) {
-            const submitButton = document.getElementById('js-submit-button');
-            submitButton.classList.remove('btnSubmit--in-error');
+        if ( this.constructor.isFormValid(this.menuState) ) {
+            this.submitButton.classList.remove('js-submit-button--in-error');
         }
-    
-    // Useful for debugging
-    // console.log(this.menuState);
+
     }
 
-    // updateOrder(activeElem, itemName, itemValue) {
+    /*
+    *   A function to update the menuOrder object, and which calls the function to update the running price total
+    */
     updateOrder() {
         
-        let selectedMeals = document.querySelectorAll(`${this.menuId} input[type="checkbox"]:checked`);
-        let NodeListlength = selectedMeals.length;
+        let selectedMeals = document.querySelectorAll(`.${this.menuClass} input[type="checkbox"]:checked`);
+        let nodeListlength = selectedMeals.length;
         let currentBill = 0;
         
-        for (let i = 0; i < NodeListlength; i++) {
+        for (let i = 0; i < nodeListlength; i++) {
             
             // For each selected meal, add it to the order object
-            this.order[ selectedMeals[i].name ] = selectedMeals[i].id;
+            this.menuOrder[ selectedMeals[i].name ] = selectedMeals[i].id;
             
             // Update the price total
             let price = parseFloat(selectedMeals[i].dataset.price);
@@ -82,27 +91,38 @@ const Menu = class Menu {
         this.updateBill(currentBill);
     }
 
+
+    /*
+    *   To avoid angering the user by only telling them their selection is invalid when they get round to clicking the order (submit) button,
+    *   test for 2 conditions at this stage - waiter approval and food items being in/out of stock
+    */
     validateOptions(selectedDish, itemId) {
-        /*
-        *   To avoid angering user by only telling them their selection is invalid when they click order (submit) button,
-        *   we are testing for 2 conditions at this stage - waiter approval and food items being in/out of stock
-        */ 
-        if (selectedDish === 'cheesecake') {
-            if( validation.limitNotExceeded(this.order, 'cheesecake', 1) ) {
+         
+        if (selectedDish === 'cheesecake' || this.errorlimit ) {
+            if( validation.limitNotExceeded(this.menuOrder, 'cheesecake', 1) ) {
                 this.menuState['limitNotExceeded'] = true;
+                if(this.errorlimit) {
+                    error.hideError('js-error-limit');
+                }
             } else {
                 this.menuState['limitNotExceeded'] = false;
-                this.errorLog.innerHTML = `Sorry, we only have one piece of cheesecake`;
+                this.errorlimit = true;
+                error.displayError('js-error-limit');
             }
         }
 
         if (selectedDish === 'prawn' || 'salmon') {
-            if( validation.noBannedCombinations(this.order, 'prawn', 'salmon') ) {
+            if( validation.noBannedCombinations(this.menuOrder, 'prawn', 'salmon') ) {
                 this.menuState['noBannedCombinations'] = true;
+                if(this.errorwaiter) {
+                    error.hideError('js-error-waiter');
+                    this.menuElement.classList.remove('menu--waiter-live');
+                }
             } else {
                 this.menuState['noBannedCombinations'] = false;
-                this.errorLog.innerHTML = 'Sorry, Pierre our waiter cannot possibly let you order both the prawn cocktail and salmon. Please choose again!';
-                document.body.classList.add('unleash-pierre');
+                this.errorwaiter = true;
+                error.displayError('js-error-waiter');
+                this.menuElement.classList.add('menu--waiter-live');
             }
         }
 
@@ -111,8 +131,8 @@ const Menu = class Menu {
     toggleOneCheckboxOnly(activeElem, itemName) {
         // First, uncheck all other checkboxes for that diner, for that course
         let sameNameSiblings = document.getElementsByName(itemName);
-        let NodeListlength = sameNameSiblings.length;
-        for (let i = 0; i < NodeListlength; i++) {
+        let nodeListlength = sameNameSiblings.length;
+        for (let i = 0; i < nodeListlength; i++) {
             sameNameSiblings[i].checked = false;
         }
        
@@ -127,8 +147,10 @@ const Menu = class Menu {
 
     initialise() {
         // Set form variables
-        const menuElement = document.querySelector(this.menuId); // The menu form
         const menuInputs = document.querySelectorAll(this.inputsClass); // The inputs that trigger validation
+
+        // Reset form values, in case user has clicked back after submitting form
+        this.menuElement.reset();
 
         // Listen for changes in the checkbox elements
         for (let i = 0; i < menuInputs.length; i++) {
@@ -136,14 +158,10 @@ const Menu = class Menu {
         }
 
         // Also listen for the user clicking submit
-        menuElement.addEventListener('submit', this.onFormSubmit.bind(this));
-
-        // useful for debugging
-        // console.log(this.menuState);
+       this.menuElement.addEventListener('submit', this.onFormSubmit.bind(this));
     }
 
     onFormSubmit(e) {
-        const submitButton = document.querySelector('.btnSubmit');
         // useful for debugging
         // console.log(this.menuState);
 
@@ -151,35 +169,26 @@ const Menu = class Menu {
         e.preventDefault();
 
         // Check that the user has ordered at least two courses, one of which is a main
-        // if( validation.minimumOrderAchieved(this.order, 'main') ) {
-        //     this.menuState[minimumOrderAchieved] = true;
-        // } else {
-        //     this.menuState[minimumOrderAchieved] = false;
-        //     this.errorLog.innerHTML = 'Sorry, each person must have at least two courses, one of which must be a main';
-        // }
+        if( validation.minimumOrderAchieved(this.menuOrder, 'diner-0-mains', 'diner-1-mains', 'diner-0') ) {
+            this.menuState['minimumOrderAchieved'] = true;
+            if(this.errorminimum) {
+                error.hideError('js-error-minimum');
+            }
+        } else {
+            this.menuState['minimumOrderAchieved'] = false;
+            this.errorminimum = true;
+            error.displayError('js-error-minimum');
+        }
 
         // Run the menuState object through the isFormValid function
         if (this.constructor.isFormValid(this.menuState)) {
-            // If everything is valid, go ahead with submission
-            const menuElement = document.querySelector(this.menuId);
-            menuElement.submit();
+            // If everything is valid, go ahead with submission and go to thanks page
+            // this.menuElement.submit();
+            // For this demo, we will settle for a success message on this screen
+            document.getElementById('js-success-message').style.display = 'block';
         } else {
             // Show the error state on the submit button
-            submitButton.classList.add('btnSubmit--in-error');
-            // Otherwise, loop through forState and if not valid show all the errors
-            for (const key in this.menuState) {
-                if (this.menuState.hasOwnProperty(key)) {
-                    if (this.menuState[key] === false) {
-                        const errID = `${key}Error`;
-                        // Not all the fields in fieldState are essential and so not all have error messages. 
-                        // If it is an essential field and an error message exists, add error state to it's parentNode
-                        let errorMessage = document.getElementById(errID);
-                        if(errorMessage) {
-                            errorMessage.parentNode.classList.add('form__field--is-inerror');
-                        }
-                    }
-                }
-            }
+            this.submitButton.classList.add('btnSubmit--in-error');
         }
     }
 };
