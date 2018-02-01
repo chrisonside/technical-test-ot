@@ -5,6 +5,7 @@
 **/
 
 $standard-padding: 20px;
+$vertical-rhythm: 15px;
 $border-radius: 3px;
 
 /**
@@ -53,13 +54,13 @@ h4 {
 h1 {
 	@include font-size(29);
 	@include line-height(38);
-	margin-bottom: 15px;
+	margin-bottom: $vertical-rhythm;
 }
 
 h2 {
 	@include font-size(23);
 	@include line-height(29);
-	margin-bottom: 15px;
+	margin-bottom: $vertical-rhythm;
 }
 
 h3 {
@@ -75,9 +76,13 @@ h4 {
 p {
 	@include font-size(16);
 	@include line-height(22);
-	margin-bottom: 15px;
+	margin-bottom: $vertical-rhythm;
 }
 
 strong {
 	font-weight: 700;
+}
+
+td {
+	vertical-align: top;
 }
